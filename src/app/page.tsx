@@ -71,9 +71,9 @@ export default function Home() {
     };
 
     run();
-    // Atualiza automaticamente a cada 5 minutos (300.000 ms)
-    const FIVE_MINUTES = 5 * 60 * 1000;
-    const interval = setInterval(run, FIVE_MINUTES);
+    // Atualiza automaticamente a cada 30 segundos (30.000 ms)
+    const THIRTY_SECONDS = 30 * 1000;
+    const interval = setInterval(run, THIRTY_SECONDS);
     return () => {
       active = false;
       clearInterval(interval);
@@ -125,14 +125,32 @@ export default function Home() {
     <main className="container">
       {/* Top Header */}
       <header className="header">
-        <span className="live-badge">● AO VIVO</span>
+        <div className="header-badge-row">
+          <Image
+            src="/bandeira-brasil.svg"
+            alt="Bandeira do Brasil"
+            width={28}
+            height={20}
+            className="header-flag"
+            priority
+          />
+          <span className="live-badge">● AO VIVO</span>
+          <Image
+            src="/bandeira-brasil.svg"
+            alt="Bandeira do Brasil"
+            width={28}
+            height={20}
+            className="header-flag"
+            priority
+          />
+        </div>
         <h1>Eleição Online: Lula 13 vs Flávio Bolsonaro 22</h1>
         <p className="total-votes">
           Total de votos contabilizados: <strong>{data.total}</strong>
         </p>
       </header>
 
-      {/* 1. BANNER SUPERIOR DE PUBLICIDADE */}
+      {/* 1. BANNER SUPERIOR DE PUBLICIDADE (COMPACTO) */}
       <section className="banner-ad banner-ad-top">
         <div className="banner-ad-left">
           <span className="ad-badge-pulse">ANUNCIE AQUI</span>
@@ -153,20 +171,42 @@ export default function Home() {
 
       {/* GRID PRINCIPAL: ESQUERDA (ANÚNCIOS) | CENTRO (VOTAÇÃO) | DIREITA (ANÚNCIOS) */}
       <div className="layout-3cols">
-        {/* COLUNA ESQUERDA: 2 Caixinhas de Anúncios */}
+        {/* COLUNA ESQUERDA: Caixinha Patrocinada + Caixinha Anuncie */}
         <aside className="ad-col ad-col-left">
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="ad-box">
-            <div className="ad-badge">ANUNCIE AQUI</div>
+          <a
+            href="https://meli.la/2ZjbUNv"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ad-box ad-box-sponsor"
+            title="Camiseta do Brasil - Vista essa Paixão | Compre no Mercado Livre"
+          >
+            <div className="ad-badge-meli">PATROCINADO</div>
+            <div className="ad-img-box">
+              <Image
+                src="/anuncio-camiseta-brasil.jpg"
+                alt="Camiseta do Brasil - Vista essa Paixão - Compre Agora"
+                width={1024}
+                height={512}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  aspectRatio: '2 / 1',
+                  objectFit: 'contain',
+                  display: 'block',
+                  borderRadius: '6px',
+                }}
+                priority
+              />
+            </div>
             <div className="ad-box-body">
-              <span className="ad-icon">📢</span>
-              <p className="ad-box-headline">Espaço Marca #1</p>
-              <p className="ad-box-sub">Visibilidade máxima</p>
-              <div className="ad-action-pill">
-                <span>Anunciar</span>
-                <span>→</span>
+              <p className="ad-box-headline">Camiseta do Brasil</p>
+              <p className="ad-box-sub">Vista essa paixão • Oficial</p>
+              <div className="ad-action-pill ad-action-meli">
+                <span>Comprar Agora</span>
+                <span>➔</span>
               </div>
             </div>
-            <div className="ad-contact">(11) 9 2754-54319</div>
+            <div className="ad-contact">Mercado Livre Oficial</div>
           </a>
 
           <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="ad-box">
@@ -350,6 +390,19 @@ export default function Home() {
           margin-bottom: 20px;
         }
 
+        .header-badge-row {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 8px;
+        }
+
+        .header-flag {
+          border-radius: 3px;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+          display: block;
+        }
+
         .live-badge {
           display: inline-block;
           font-size: 11px;
@@ -358,7 +411,6 @@ export default function Home() {
           background: rgba(34, 197, 94, 0.15);
           padding: 4px 10px;
           border-radius: 20px;
-          margin-bottom: 10px;
           letter-spacing: 0.05em;
         }
 
@@ -382,12 +434,12 @@ export default function Home() {
         .banner-ad {
           background: linear-gradient(135deg, #131b2e 0%, #0d1322 100%);
           border: 2px dashed rgba(56, 189, 248, 0.4);
-          border-radius: 14px;
-          padding: 14px 20px;
+          border-radius: 12px;
+          padding: 10px 18px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 16px;
+          gap: 14px;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
           transition: border-color 0.2s, transform 0.2s;
         }
@@ -397,11 +449,11 @@ export default function Home() {
         }
 
         .banner-ad-top {
-          margin-bottom: 22px;
+          margin-bottom: 20px;
         }
 
         .banner-ad-bottom {
-          margin-top: 28px;
+          margin-top: 26px;
         }
 
         .banner-ad-left {
@@ -775,6 +827,63 @@ export default function Home() {
           cursor: not-allowed;
         }
 
+        /* Caixinha Lateral Patrocinada (Camiseta do Brasil) */
+        .ad-box-sponsor {
+          display: flex;
+          flex-direction: column;
+          background: linear-gradient(145deg, #101c33 0%, #070e1b 100%);
+          border: 2px solid #eab308;
+          border-radius: 14px;
+          padding: 12px 12px;
+          text-decoration: none;
+          color: inherit;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 14px rgba(234, 179, 8, 0.15);
+          transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+          cursor: pointer;
+        }
+
+        .ad-box-sponsor:hover {
+          transform: translateY(-3px);
+          border-color: #facc15;
+          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5), 0 0 22px rgba(250, 204, 21, 0.3);
+        }
+
+        .ad-badge-meli {
+          display: inline-block;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          color: #fef08a;
+          background: rgba(234, 179, 8, 0.2);
+          border: 1px solid rgba(234, 179, 8, 0.45);
+          padding: 2px 7px;
+          border-radius: 4px;
+          width: fit-content;
+          margin-bottom: 6px;
+          text-transform: uppercase;
+        }
+
+        .ad-img-box {
+          width: 100%;
+          border-radius: 6px;
+          overflow: hidden;
+          line-height: 0;
+          margin: 2px 0 6px;
+          border: 1px solid rgba(250, 204, 21, 0.25);
+          background: #000;
+        }
+
+        .ad-action-meli {
+          background: #ffe600;
+          color: #1e293b;
+          font-weight: 900;
+          box-shadow: 0 2px 8px rgba(255, 230, 0, 0.35);
+        }
+
+        .ad-box-sponsor:hover .ad-action-meli {
+          background: #facc15;
+        }
+
         /* Responsividade */
         @media (max-width: 1120px) {
           .layout-3cols {
@@ -782,25 +891,105 @@ export default function Home() {
           }
         }
 
-        /* Responsividade: No Celular (<= 960px) exibe SOMENTE 2 PUBLICIDADES (Banner Topo e Banner Rodapé) */
+        /* Responsividade: No Celular (<= 960px) exibe SOMENTE 2 PUBLICIDADES (Banner Topo e Anúncio Patrocinado) */
         @media (max-width: 960px) {
-          .layout-3cols {
-            grid-template-columns: 1fr;
+          .container {
+            padding: 16px 12px 30px;
           }
-          .ad-col {
-            display: none !important; /* Esconde caixinhas laterais no celular */
+
+          .header {
+            margin-bottom: 14px;
           }
+
+          h1 {
+            font-size: 20px;
+            line-height: 1.3;
+          }
+
+          .total-votes {
+            font-size: 14px;
+          }
+
+          .total-votes strong {
+            font-size: 18px;
+          }
+
+          /* Corrige o Banner Superior para empilhar verticalmente e não espremer o texto */
           .banner-ad {
-            flex-direction: column;
-            text-align: center;
-            gap: 12px;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            text-align: center !important;
+            padding: 14px 16px !important;
+            gap: 12px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
           }
+
           .banner-ad-left {
-            flex-direction: column;
-            gap: 8px;
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 8px !important;
+            width: 100% !important;
           }
+
+          .banner-ad-text {
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+            margin: 0 !important;
+          }
+
+          .btn-whatsapp-ad {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 11px 16px !important;
+            font-size: 13px !important;
+            box-sizing: border-box !important;
+          }
+
+          .layout-3cols {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 18px !important;
+          }
+
+          .voting-main {
+            order: 1 !important; /* Votação aparece PRIMEIRO no celular */
+          }
+
+          .ad-col-left {
+            order: 2 !important; /* Anúncio patrocinado fica ABAIXO da votação */
+            display: block !important;
+            width: 100% !important;
+            max-width: 360px !important;
+            margin: 0 auto !important;
+          }
+
+          .ad-col-right {
+            display: none !important;
+          }
+
+          .banner-ad-bottom {
+            display: none !important;
+          }
+
+          .ad-box:not(.ad-box-sponsor) {
+            display: none !important; /* Esconde placeholders no celular */
+          }
+
           .cards-grid {
             grid-template-columns: 1fr;
+            gap: 14px;
+          }
+
+          .card {
+            padding: 16px 14px;
+          }
+
+          .photo {
+            width: 110px !important;
+            height: 110px !important;
           }
         }
       `}</style>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 504" width="720" height="504">
+  <rect width="720" height="504" fill="#009c3b"/>
+  <polygon points="360,57.6 662.4,252 360,446.4 57.6,252" fill="#ffdf00"/>
+  <circle cx="360" cy="252" r="126" fill="#002776"/>
+  <!-- Faixa Branca -->
+  <path d="M 235.5 240 C 275 220, 440 220, 484.5 252 C 440 236, 275 236, 235.5 256 Z" fill="#ffffff"/>
+  <!-- Estrelas simplificadas para visualização nítida -->
+  <circle cx="360" cy="300" r="3.5" fill="#ffffff"/>
+  <circle cx="330" cy="275" r="3" fill="#ffffff"/>
+  <circle cx="390" cy="275" r="3" fill="#ffffff"/>
+  <circle cx="345" cy="320" r="2.5" fill="#ffffff"/>
+  <circle cx="375" cy="320" r="2.5" fill="#ffffff"/>
+  <circle cx="360" cy="210" r="3" fill="#ffffff"/>
+</svg>
