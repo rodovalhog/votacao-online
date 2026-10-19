@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@electric-sql/pglite':
-        specifier: ^0.5.10
-        version: 0.5.10
       canvas-confetti:
         specifier: ^1.9.4
         version: 1.9.4
@@ -2513,7 +2510,8 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@electric-sql/pglite@0.5.10': {}
+  '@electric-sql/pglite@0.5.10':
+    optional: true
 
   '@emnapi/core@1.10.0':
     dependencies:

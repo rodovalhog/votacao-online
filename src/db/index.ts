@@ -1,60 +1,25 @@
-import { PGlite } from '@electric-sql/pglite';
-import { drizzle as drizzlePglite } from 'drizzle-orm/pglite';
-import { drizzle as drizzlePostgres } from 'drizzle-orm/postgres-js';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
-import path from 'path';
-import fs from 'fs';
 
-// Auto-load DATABASE_URL from .env.local if not already in process.env
-if (!process.env.DATABASE_URL) {
-  try {
-    const envFile = fs.readFileSync(path.join(process.cwd(), '.env.local'), 'utf8');
-    const match = envFile.match(/DATABASE_URL="?([^"\n]+)"?/);
-    if (match) process.env.DATABASE_URL = match[1];
-  } catch {
-    // ignore
-  }
-}
+const connectionString =
+  process.env.DATABASE_URL ||
+  'postgresql://neondb_owner:npg_KYDhtJ4zB0Od@ep-flat-feather-b5kfvj8r-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __db_instance: any;
-  // eslint-disable-next-line no-var
-  var __db_table_created: boolean | undefined;
-}
+// Connection with SSL for Neon PostgreSQL on Vercel and local
+export const client = postgres(connectionString, {
+  ssl: 'require',
+  max: 10,
+  idle_timeout: 20,
+  connect_timeout: 10,
+});
 
-function getDatabase() {
-  if (global.__db_instance) {
-    return global.__db_instance;
-  }
+export const db = drizzle(client, { schema });
 
-  const databaseUrl = process.env.DATABASE_URL;
-
-  if (databaseUrl && databaseUrl.startsWith('postgres')) {
-    const client = postgres(databaseUrl, {
-      ssl: 'require',
-      max: 10,
-    });
-    const db = drizzlePostgres(client, { schema });
-    global.__db_instance = { db, client, isPglite: false };
-    return global.__db_instance;
-  }
-
-  // Local embedded PostgreSQL (PGlite) - zero-config fallback
-  const dir = path.join(process.cwd(), '.data', 'pglite');
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  const client = new PGlite(dir);
-  const db = drizzlePglite({ client, schema });
-  global.__db_instance = { db, client, isPglite: true };
-  return global.__db_instance;
-}
-
-export const { db, client, isPglite } = getDatabase();
+let initialized = false;
 
 export async function initDb() {
-  if (global.__db_table_created) return;
+  if (initialized) return;
 
   const sql = `
     CREATE TABLE IF NOT EXISTS candidates (
@@ -74,13 +39,9 @@ export async function initDb() {
   `;
 
   try {
-    if (isPglite) {
-      await client.exec(sql);
-    } else {
-      await client.unsafe(sql);
-    }
-    global.__db_table_created = true;
+    await client.unsafe(sql);
+    initialized = true;
   } catch (e) {
-    console.error('Error creating candidates table:', e);
+    console.error('Error in initDb:', e);
   }
 }

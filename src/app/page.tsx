@@ -46,7 +46,9 @@ export default function Home() {
 
   useEffect(() => {
     fetchVotes();
-    const interval = setInterval(fetchVotes, 1500);
+    // Atualiza automaticamente a cada 5 minutos (300.000 ms)
+    const FIVE_MINUTES = 5 * 60 * 1000;
+    const interval = setInterval(fetchVotes, FIVE_MINUTES);
     return () => clearInterval(interval);
   }, []);
 
@@ -70,6 +72,14 @@ export default function Home() {
         if (typeof window !== 'undefined') {
           localStorage.setItem('voto_registrado', candidate);
         }
+        // Atualiza a tela imediatamente com os novos números retornados
+        setData({
+          lula: result.lula ?? data.lula,
+          flavio: result.flavio ?? data.flavio,
+          total: result.total ?? data.total,
+          hasVoted: true,
+          votedFor: candidate,
+        });
         setMessage('Voto computado com sucesso!');
         await fetchVotes();
       }

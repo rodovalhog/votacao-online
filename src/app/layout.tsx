@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
@@ -16,13 +16,18 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   title: 'Votação Presidencial em Tempo Real | Lula 13 vs Flávio Bolsonaro 22',
   description:
-    'Acompanhe e participe da apuração da eleição online em tempo real. Desenvolvido com Next.js, Drizzle ORM, PostgreSQL e SSE. 1 voto por IP.',
+    'Acompanhe e participe da apuração da eleição online em tempo real. Desenvolvido com Next.js, Drizzle ORM e PostgreSQL.',
   keywords: ['eleição', 'votação online', 'lula 13', 'flavio bolsonaro 22', 'tempo real', 'drizzle orm', 'postgresql'],
   authors: [{ name: 'Votação Online Brasil' }],
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 };
 
 export default function RootLayout({

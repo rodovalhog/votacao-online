@@ -27,12 +27,28 @@ export async function POST(req: NextRequest) {
       .set({ votes: sql`${candidates.votes} + 1` })
       .where(eq(candidates.id, candidate));
 
-    // Retorna a resposta e grava a flag no cookie do navegador por 1 ano
-    const response = NextResponse.json({ success: true, votedFor: candidate });
+    // Busca os totais atualizados para retornar instantaneamente ao eleitor
+    const rows = await db.select().from(candidates);
+    let lula = 0;
+    let flavio = 0;
+    for (const r of rows) {
+      if (r.id === 'lula') lula = Number(r.votes) || 0;
+      if (r.id === 'flavio') flavio = Number(r.votes) || 0;
+    }
+
+    // Retorna a resposta com a contagem atualizada e grava a flag no cookie
+    const response = NextResponse.json({
+      success: true,
+      votedFor: candidate,
+      lula,
+      flavio,
+      total: lula + flavio,
+    });
+
     response.cookies.set('voto_registrado', candidate, {
       path: '/',
       maxAge: 60 * 60 * 24 * 365, // 1 ano
-      httpOnly: false, // Permite checar também via JS/localStorage
+      httpOnly: false,
       sameSite: 'lax',
     });
 
