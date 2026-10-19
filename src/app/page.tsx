@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 
 interface VoteData {
@@ -25,14 +25,17 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  // Busca votos e atualiza em tempo real (polling a cada 1.5s)
-  const fetchVotes = async () => {
+  // Busca votos e atualiza em tempo real
+  const fetchVotes = useCallback(async () => {
     try {
       const res = await fetch('/api/votes', { cache: 'no-store' });
       if (res.ok) {
         const json = await res.json();
         // Bloqueio extra persistente no aparelho do eleitor (localStorage)
-        const localFlag = typeof window !== 'undefined' ? (localStorage.getItem('voto_registrado') as 'lula' | 'flavio' | null) : null;
+        const localFlag =
+          typeof window !== 'undefined'
+            ? (localStorage.getItem('voto_registrado') as 'lula' | 'flavio' | null)
+            : null;
         if (localFlag && !json.hasVoted) {
           json.hasVoted = true;
           json.votedFor = localFlag;
@@ -42,14 +45,39 @@ export default function Home() {
     } catch (err) {
       console.error('Erro ao buscar votos:', err);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchVotes();
+    let active = true;
+
+    const run = async () => {
+      try {
+        const res = await fetch('/api/votes', { cache: 'no-store' });
+        if (res.ok && active) {
+          const json = await res.json();
+          const localFlag =
+            typeof window !== 'undefined'
+              ? (localStorage.getItem('voto_registrado') as 'lula' | 'flavio' | null)
+              : null;
+          if (localFlag && !json.hasVoted) {
+            json.hasVoted = true;
+            json.votedFor = localFlag;
+          }
+          setData(json);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar votos:', err);
+      }
+    };
+
+    run();
     // Atualiza automaticamente a cada 5 minutos (300.000 ms)
     const FIVE_MINUTES = 5 * 60 * 1000;
-    const interval = setInterval(fetchVotes, FIVE_MINUTES);
-    return () => clearInterval(interval);
+    const interval = setInterval(run, FIVE_MINUTES);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, []);
 
   const handleVote = async (candidate: 'lula' | 'flavio') => {

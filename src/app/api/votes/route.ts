@@ -27,8 +27,9 @@ export async function GET(req: NextRequest) {
       hasVoted: Boolean(cookieVote),
       votedFor: cookieVote || null,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro em GET /api/votes:', error);
-    return NextResponse.json({ error: 'Erro ao buscar votos', details: error?.message || String(error) }, { status: 500 });
+    const msg = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: 'Erro ao buscar votos', details: msg }, { status: 500 });
   }
 }

@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro em POST /api/vote:', error);
     return NextResponse.json({ error: 'Erro ao registrar voto' }, { status: 500 });
   }
