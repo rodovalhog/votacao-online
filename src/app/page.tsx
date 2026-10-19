@@ -186,20 +186,6 @@ export default function Home() {
 
         {/* COLUNA CENTRAL: Área Principal de Votação */}
         <section className="voting-main">
-          {/* Mensagem de confirmação de voto */}
-          {data.hasVoted && (
-            <div className="voted-alert">
-              <span className="voted-icon">✓</span>
-              <div className="voted-text">
-                <strong>Obrigado pelo seu voto!</strong> Você já votou neste IP (Votou em:{' '}
-                <span className="voted-name">
-                  {data.votedFor === 'lula' ? 'Lula 13' : 'Flávio Bolsonaro 22'}
-                </span>
-                ). Apenas 1 voto por IP é permitido.
-              </div>
-            </div>
-          )}
-
           {message && <div className="alert">{message}</div>}
 
           {/* Barra de porcentagem simples */}
@@ -250,19 +236,15 @@ export default function Home() {
                 <span className="count-pct">({lulaPct}%)</span>
               </div>
 
-              <button
-                onClick={() => handleVote('lula')}
-                disabled={data.hasVoted || loading}
-                className="btn-vote btn-lula"
-              >
-                {data.hasVoted && data.votedFor === 'lula'
-                  ? '✓ SEU VOTO COMPUTADO'
-                  : data.hasVoted
-                  ? 'BLOQUEADO (1 VOTO POR IP)'
-                  : loading
-                  ? 'Gravando...'
-                  : 'VOTAR NO LULA 13'}
-              </button>
+              {!data.hasVoted && (
+                <button
+                  onClick={() => handleVote('lula')}
+                  disabled={loading}
+                  className="btn-vote btn-lula"
+                >
+                  {loading ? 'Gravando...' : 'VOTAR NO LULA 13'}
+                </button>
+              )}
             </div>
 
             {/* Card Flávio Bolsonaro */}
@@ -289,19 +271,15 @@ export default function Home() {
                 <span className="count-pct">({flavioPct}%)</span>
               </div>
 
-              <button
-                onClick={() => handleVote('flavio')}
-                disabled={data.hasVoted || loading}
-                className="btn-vote btn-flavio"
-              >
-                {data.hasVoted && data.votedFor === 'flavio'
-                  ? '✓ SEU VOTO COMPUTADO'
-                  : data.hasVoted
-                  ? 'BLOQUEADO (1 VOTO POR IP)'
-                  : loading
-                  ? 'Gravando...'
-                  : 'VOTAR NO FLÁVIO 22'}
-              </button>
+              {!data.hasVoted && (
+                <button
+                  onClick={() => handleVote('flavio')}
+                  disabled={loading}
+                  className="btn-vote btn-flavio"
+                >
+                  {loading ? 'Gravando...' : 'VOTAR NO FLÁVIO 22'}
+                </button>
+              )}
             </div>
           </div>
         </section>
